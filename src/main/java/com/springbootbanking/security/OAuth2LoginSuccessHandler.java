@@ -29,9 +29,9 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     private final ObjectMapper objectMapper;
 
     public OAuth2LoginSuccessHandler(JwtTokenProvider tokenProvider,
-                                     CustomerRepository customerRepository,
-                                     PasswordEncoder passwordEncoder,
-                                     ObjectMapper objectMapper) {
+            CustomerRepository customerRepository,
+            PasswordEncoder passwordEncoder,
+            ObjectMapper objectMapper) {
         this.tokenProvider = tokenProvider;
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
@@ -40,15 +40,15 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
+            HttpServletResponse response,
+            Authentication authentication) throws IOException, ServletException {
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
         String clientRegistrationId = oauthToken.getAuthorizedClientRegistrationId();
         OAuth2User oAuth2User = oauthToken.getPrincipal();
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
-        final AuthProvider provider = "github".equalsIgnoreCase(clientRegistrationId) 
-                ? AuthProvider.GITHUB 
+        final AuthProvider provider = "github".equalsIgnoreCase(clientRegistrationId)
+                ? AuthProvider.GITHUB
                 : AuthProvider.GOOGLE;
 
         final String providerId;
@@ -88,7 +88,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private Customer getOrCreateCustomer(AuthProvider provider, String providerId, String email, String displayName) {
         return customerRepository.findByAuthProviderAndOauthProviderId(provider, providerId)
-                .or(() -> (email != null && !email.isBlank()) ? customerRepository.findByEmail(email) : java.util.Optional.empty())
+                .or(() -> (email != null && !email.isBlank()) ? customerRepository.findByEmail(email)
+                        : java.util.Optional.empty())
                 .orElseGet(() -> {
                     String baseUsername = (email != null && !email.isBlank())
                             ? email.split("@")[0].replaceAll("[^a-zA-Z0-9_]", "")
@@ -109,10 +110,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                             email,
                             provider,
                             providerId,
-                            randomPassword
-                    );
+                            randomPassword);
                     return customerRepository.save(newCustomer);
                 });
     }
 }
-

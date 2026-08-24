@@ -4,15 +4,14 @@
 FROM eclipse-temurin:17-jdk-alpine AS builder
 WORKDIR /app
 
-# Copy Maven wrapper & pom.xml first to leverage Docker layer caching
+# Copy Maven wrapper, settings & pom.xml
 COPY pom.xml mvnw mvnw.cmd ./
 COPY .mvn .mvn
 RUN chmod +x ./mvnw
-RUN ./mvnw dependency:go-offline -B || true
 
-# Copy source code and package application (skipping tests for fast container build)
+# Copy source code and package application using Google Maven Mirror
 COPY src ./src
-RUN ./mvnw clean package -DskipTests
+RUN ./mvnw clean package -DskipTests -s .mvn/settings.xml -B
 
 # ============================================================
 # Stage 2: Minimal, Secure JRE Runtime Image
