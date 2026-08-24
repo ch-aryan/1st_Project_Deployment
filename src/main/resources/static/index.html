@@ -503,6 +503,36 @@
 
     <!-- TAB 1: AUTH & REGISTRATION -->
     <div id="tab-auth" class="tab-content active">
+        <!-- OAuth Completion Section (shown only when OAuth user needs account setup) -->
+        <div class="card" id="oauthCompleteCard" style="display: none; border-color: rgba(59, 130, 246, 0.4); background: rgba(30, 41, 59, 0.95);">
+            <div class="card-header">
+                <h2>🎉 OAuth Login Successful! Set Up Your Bank Account</h2>
+                <p>Welcome, <strong id="oauthUsernameText" style="color: #60a5fa;">User</strong>! Enter a 4-digit PIN and Date of Birth to generate your account number.</p>
+            </div>
+            <form id="oauthCompleteForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>4-Digit Security PIN</label>
+                        <input type="password" id="oauthPin" maxlength="4" placeholder="e.g. 1234" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date" id="oauthDob" value="2000-01-01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="oauthGender" required>
+                            <option value="MALE">Male</option>
+                            <option value="FEMALE">Female</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Activate Bank Account & Finish</button>
+            </form>
+            <div id="oauthAlert" class="alert"></div>
+        </div>
+
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
             <!-- Login Card -->
             <div class="card">
@@ -565,7 +595,7 @@
         </div>
 
         <!-- Active Session Details -->
-        <div class="card" id="sessionCard" style="display: none;">
+        <div class="card" id="sessionCard" style="display: none; margin-top: 24px;">
             <div class="card-header">
                 <h2>Active Session Details</h2>
                 <p>Use this JWT Token for Swagger Authorization & Protected API Endpoints</p>
@@ -720,7 +750,9 @@
 
     function setAuth(token, account, user) {
         localStorage.setItem('jwt_token', token);
-        if (account) localStorage.setItem('account_number', account);
+        if (account && account !== 'null' && account !== '') {
+            localStorage.setItem('account_number', account);
+        }
         if (user) localStorage.setItem('username', user);
         updateAuthUI();
     }
@@ -732,7 +764,7 @@
 
     function updateAuthUI() {
         const token = getJwt();
-        const account = localStorage.getItem('account_number') || 'N/A';
+        const account = localStorage.getItem('account_number') || 'Not Created Yet';
         const user = localStorage.getItem('username') || 'User';
 
         const chip = document.getElementById('authStatusChip');
@@ -749,7 +781,7 @@
             document.getElementById('sessionUser').innerText = user;
             document.getElementById('tokenBox').innerText = token;
 
-            if (account && account !== 'N/A') {
+            if (account && account !== 'Not Created Yet') {
                 if (document.getElementById('depositAccount')) document.getElementById('depositAccount').value = account;
                 if (document.getElementById('withdrawAccount')) document.getElementById('withdrawAccount').value = account;
                 if (document.getElementById('fromAccount')) document.getElementById('fromAccount').value = account;
@@ -768,6 +800,62 @@
         alert.className = isSuccess ? 'alert alert-success' : 'alert alert-error';
         alert.innerHTML = message;
     }
+
+    // Check OAuth query params on page load
+    function checkOAuthUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token');
+        const username = params.get('username');
+        const accountNumber = params.get('accountNumber');
+        const registrationComplete = params.get('registrationComplete');
+
+        if (token) {
+            setAuth(token, accountNumber, username);
+            window.history.replaceState({}, document.title, window.location.pathname);
+
+            if (registrationComplete === 'false' || !accountNumber || accountNumber === 'null') {
+                document.getElementById('oauthCompleteCard').style.display = 'block';
+                document.getElementById('oauthUsernameText').innerText = username;
+            } else {
+                showAlert('loginAlert', true, `✅ <strong>OAuth Login Successful!</strong> Welcome back, ${username}!`);
+            }
+        }
+    }
+
+    // OAuth Completion Form Submit
+    document.getElementById('oauthCompleteForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const pin = document.getElementById('oauthPin').value;
+        const dateOfBirth = document.getElementById('oauthDob').value;
+        const gender = document.getElementById('oauthGender').value;
+        const token = getJwt();
+
+        try {
+            const res = await fetch('/api/v3/register/complete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ pin, dateOfBirth, gender })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                const accNum = data.accountNumber;
+                localStorage.setItem('account_number', accNum);
+                updateAuthUI();
+                showAlert('oauthAlert', true, `🎉 <strong>Bank Account Activated!</strong><br>Your New Account Number: <strong>${accNum}</strong><br>You can now make Deposits, Transfers, and view your Statement!`);
+                setTimeout(() => {
+                    document.getElementById('oauthCompleteCard').style.display = 'none';
+                }, 4000);
+            } else {
+                showAlert('oauthAlert', false, `❌ ${data.message || 'Failed to complete registration'}`);
+            }
+        } catch (err) {
+            showAlert('oauthAlert', false, `Network error: ${err.message}`);
+        }
+    });
 
     document.getElementById('loginForm').addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -940,6 +1028,8 @@
         }
     }
 
+    // Initialize UI and check OAuth params
+    checkOAuthUrlParams();
     updateAuthUI();
 </script>
 

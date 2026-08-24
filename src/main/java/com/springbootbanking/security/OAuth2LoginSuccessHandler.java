@@ -76,17 +76,14 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         String token = tokenProvider.generateToken(customer.getUsername());
         Integer accountNumber = (customer.getAccount() != null) ? customer.getAccount().getAccountNumber() : null;
 
-        LoginResponse loginResponse = new LoginResponse(
-                token,
-                "Bearer",
-                customer.getUsername(),
-                accountNumber,
-                customer.isRegistrationComplete()
-        );
+        // Redirect browser to dashboard with token parameters
+        String redirectUrl = String.format("/index.html?token=%s&username=%s&accountNumber=%s&registrationComplete=%s",
+                java.net.URLEncoder.encode(token, java.nio.charset.StandardCharsets.UTF_8),
+                java.net.URLEncoder.encode(customer.getUsername(), java.nio.charset.StandardCharsets.UTF_8),
+                (accountNumber != null) ? accountNumber.toString() : "",
+                customer.isRegistrationComplete());
 
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.getOutputStream().println(objectMapper.writeValueAsString(loginResponse));
+        response.sendRedirect(redirectUrl);
     }
 
     private Customer getOrCreateCustomer(AuthProvider provider, String providerId, String email, String displayName) {
