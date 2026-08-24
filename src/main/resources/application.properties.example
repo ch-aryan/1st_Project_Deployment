@@ -3,6 +3,9 @@
 # ============================================================
 spring.application.name=springboot-banking
 
+# Server Port (Dynamic Cloud Port Binding)
+server.port=${PORT:8080}
+
 # Database Configuration
 spring.datasource.url=${DB_URL:${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/banking_system_db}}
 spring.datasource.username=${DB_USERNAME:${SPRING_DATASOURCE_USERNAME:postgres}}

@@ -27,7 +27,7 @@ USER appuser
 # Copy executable jar from builder stage
 COPY --from=builder /app/target/springboot-banking-*.jar app.jar
 
-EXPOSE 8080
+ENV PORT=8080
+EXPOSE 8080 10000
 
 ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
-
