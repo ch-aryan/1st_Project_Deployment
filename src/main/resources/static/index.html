@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spring Boot Banking System - Dashboard</title>
+    <title>Aryan Chilukeshwaram's First Deployment - Banking System</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -29,8 +29,8 @@
         }
 
         body {
-            background: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
-                        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 40%),
+            background: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 40%),
                         var(--bg);
             color: var(--text-main);
             min-height: 100vh;
@@ -42,13 +42,92 @@
             margin: 0 auto;
         }
 
+        /* Hero / Milestone Welcome Banner */
+        .hero-banner {
+            text-align: center;
+            padding: 38px 24px;
+            margin-bottom: 32px;
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 320px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.35) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 18px;
+            border-radius: 50px;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.35);
+            color: #93c5fd;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .pulse-icon {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #60a5fa;
+            box-shadow: 0 0 10px #60a5fa;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        .hero-title {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            color: #ffffff;
+            margin-bottom: 10px;
+            line-height: 1.25;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, #60a5fa 0%, #a855f7 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 14px;
+            color: #94a3b8;
+            max-width: 620px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Navbar Header */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 24px;
+            padding-bottom: 20px;
             border-bottom: 1px solid var(--card-border);
-            margin-bottom: 32px;
+            margin-bottom: 28px;
             flex-wrap: wrap;
             gap: 16px;
         }
@@ -60,19 +139,19 @@
         }
 
         .logo-badge {
-            width: 44px;
-            height: 44px;
+            width: 42px;
+            height: 42px;
             border-radius: 12px;
             background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 20px;
             box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
         }
 
-        .brand h1 {
-            font-size: 20px;
+        .brand h2 {
+            font-size: 18px;
             font-weight: 800;
             letter-spacing: -0.5px;
         }
@@ -85,6 +164,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            flex-wrap: wrap;
         }
 
         .btn-swagger {
@@ -133,6 +213,7 @@
             background: currentColor;
         }
 
+        /* Tabs */
         .tabs {
             display: flex;
             gap: 10px;
@@ -166,6 +247,7 @@
             box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
         }
 
+        /* Tab Content */
         .tab-content {
             display: none;
         }
@@ -180,6 +262,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Cards & Forms */
         .card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -277,6 +360,7 @@
             background: rgba(255, 255, 255, 0.12);
         }
 
+        /* Result Alerts */
         .alert {
             margin-top: 20px;
             padding: 16px;
@@ -299,6 +383,7 @@
             color: #fca5a5;
         }
 
+        /* Transaction Table */
         .table-responsive {
             overflow-x: auto;
             border-radius: 10px;
@@ -373,12 +458,25 @@
 <body>
 
 <div class="container">
+    <!-- Hero / Milestone Welcome Banner -->
+    <div class="hero-banner">
+        <div class="hero-badge">
+            <span class="pulse-icon"></span>
+            <span>PROD V1.0 • LIVE MILESTONE</span>
+        </div>
+        <h1 class="hero-title">Aryan Chilukeshwaram's <span>First Deployment</span></h1>
+        <p class="hero-subtitle">
+            A high-performance Core Banking System built with Spring Boot 3, Spring Security (JWT + OAuth2), and PostgreSQL.
+        </p>
+    </div>
+
+    <!-- Navbar Header -->
     <header>
         <div class="brand">
             <div class="logo-badge">🏦</div>
             <div>
-                <h1>Spring Banking <span>Core</span></h1>
-                <p style="font-size: 12px; color: var(--text-muted);">Cloud REST API & Portal</p>
+                <h2>Spring Banking <span>Engine</span></h2>
+                <p style="font-size: 12px; color: var(--text-muted);">Secure Cloud Banking Portal & REST API</p>
             </div>
         </div>
 
@@ -394,6 +492,7 @@
         </div>
     </header>
 
+    <!-- Navigation Tabs -->
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('auth', event)">🔐 Auth & Registration</button>
         <button class="tab-btn" onclick="switchTab('deposit', event)">💵 Deposit</button>
@@ -405,10 +504,11 @@
     <!-- TAB 1: AUTH & REGISTRATION -->
     <div id="tab-auth" class="tab-content active">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+            <!-- Login Card -->
             <div class="card">
                 <div class="card-header">
                     <h2>Sign In</h2>
-                    <p>Enter your credentials to get JWT Bearer Token</p>
+                    <p>Enter your credentials to get your JWT Bearer Token</p>
                 </div>
                 <form id="loginForm">
                     <div class="form-group" style="margin-bottom: 14px;">
@@ -422,7 +522,7 @@
                     <button type="submit" class="btn-primary" style="width: 100%;">Sign In</button>
                 </form>
 
-                <div style="margin-top: 20px; text-align: center; color: var(--text-muted); font-size: 12px;">or social sign in</div>
+                <div style="margin-top: 20px; text-align: center; color: var(--text-muted); font-size: 12px;">or continue with OAuth</div>
                 <div style="display: flex; gap: 10px; margin-top: 12px;">
                     <a href="/oauth2/authorization/google" class="btn-secondary" style="flex: 1; text-align: center; text-decoration: none; font-size: 13px;">Google</a>
                     <a href="/oauth2/authorization/github" class="btn-secondary" style="flex: 1; text-align: center; text-decoration: none; font-size: 13px;">GitHub</a>
@@ -431,6 +531,7 @@
                 <div id="loginAlert" class="alert"></div>
             </div>
 
+            <!-- Registration Card -->
             <div class="card">
                 <div class="card-header">
                     <h2>Open New Account</h2>
@@ -463,6 +564,7 @@
             </div>
         </div>
 
+        <!-- Active Session Details -->
         <div class="card" id="sessionCard" style="display: none;">
             <div class="card-header">
                 <h2>Active Session Details</h2>

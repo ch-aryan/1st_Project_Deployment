@@ -3,49 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spring Boot Banking - Login</title>
+    <title>Aryan Chilukeshwaram's First Deployment - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 40%),
+                        #0b0f19;
+            color: #f8fafc;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 24px;
         }
-        .login-card {
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        .wrapper {
             width: 100%;
-            max-width: 420px;
+            max-width: 440px;
+        }
+
+        /* Milestone Banner */
+        .deployment-badge {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 50px;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.35);
+            color: #93c5fd;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .pulse {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #60a5fa;
+            box-shadow: 0 0 10px #60a5fa;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+        .deployment-title {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.6px;
+            color: #ffffff;
+            line-height: 1.3;
+        }
+        .deployment-title span {
+            background: linear-gradient(135deg, #60a5fa 0%, #a855f7 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-card {
+            background: rgba(22, 30, 49, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
             padding: 36px 32px;
         }
         .header {
             text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
-        .header h1 {
-            font-size: 24px;
-            color: #0f172a;
+        .header h2 {
+            font-size: 20px;
+            color: #f8fafc;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         .header p {
-            font-size: 14px;
-            color: #64748b;
+            font-size: 13px;
+            color: #94a3b8;
         }
         .oauth-buttons {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            margin-bottom: 24px;
+            margin-bottom: 22px;
         }
         .oauth-btn {
             display: flex;
@@ -53,41 +107,41 @@
             justify-content: center;
             gap: 12px;
             padding: 12px 16px;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 14px;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.2s ease;
             cursor: pointer;
-            border: 1px solid #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .google-btn {
             background-color: #ffffff;
             color: #1e293b;
         }
         .google-btn:hover {
-            background-color: #f8fafc;
-            border-color: #cbd5e1;
+            background-color: #f1f5f9;
         }
         .github-btn {
-            background-color: #24292f;
+            background-color: #1f2937;
             color: #ffffff;
-            border-color: #24292f;
         }
         .github-btn:hover {
-            background-color: #1a1e22;
+            background-color: #374151;
         }
         .divider {
             display: flex;
             align-items: center;
-            margin-bottom: 24px;
-            color: #94a3b8;
-            font-size: 13px;
+            margin-bottom: 22px;
+            color: #64748b;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .divider::before, .divider::after {
             content: "";
             flex: 1;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
         .divider span {
             padding: 0 12px;
@@ -99,13 +153,15 @@
             display: block;
             font-size: 13px;
             font-weight: 600;
-            color: #334155;
+            color: #cbd5e1;
             margin-bottom: 6px;
         }
         .form-group input {
             width: 100%;
-            padding: 10px 14px;
-            border: 1px solid #cbd5e1;
+            padding: 12px 14px;
+            background: #111827;
+            border: 1px solid #374151;
+            color: #f8fafc;
             border-radius: 8px;
             font-size: 14px;
             outline: none;
@@ -113,7 +169,7 @@
         }
         .form-group input:focus {
             border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
         .submit-btn {
             width: 100%;
@@ -131,6 +187,18 @@
         .submit-btn:hover {
             background-color: #1d4ed8;
         }
+        .portal-link {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            font-size: 13px;
+            color: #60a5fa;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .portal-link:hover {
+            text-decoration: underline;
+        }
         .result-box {
             margin-top: 20px;
             padding: 14px;
@@ -140,65 +208,76 @@
             word-break: break-all;
         }
         .result-success {
-            background-color: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            color: #166534;
+            background-color: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
         }
         .result-error {
-            background-color: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #991b1b;
+            background-color: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
         }
     </style>
 </head>
 <body>
 
-<div class="login-card">
-    <div class="header">
-        <h1>Banking Portal</h1>
-        <p>Sign in to your account</p>
+<div class="wrapper">
+    <!-- Milestone Welcome Banner -->
+    <div class="deployment-badge">
+        <div class="badge-pill">
+            <span class="pulse"></span>
+            <span>PROD V1.0 • LIVE MILESTONE</span>
+        </div>
+        <h1 class="deployment-title">Aryan Chilukeshwaram's<br><span>First Deployment</span></h1>
     </div>
 
-    <!-- OAuth2 Login Buttons -->
-    <div class="oauth-buttons">
-        <a href="/oauth2/authorization/google" class="oauth-btn google-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-            </svg>
-            Continue with Google
-        </a>
-
-        <a href="/oauth2/authorization/github" class="oauth-btn github-btn">
-            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-            </svg>
-            Continue with GitHub
-        </a>
-    </div>
-
-    <div class="divider">
-        <span>or sign in with password</span>
-    </div>
-
-    <!-- Username / Password Form -->
-    <form id="loginForm">
-        <div class="form-group">
-            <label for="username">Username or Email</label>
-            <input type="text" id="username" name="username" placeholder="Enter username" required>
+    <div class="login-card">
+        <div class="header">
+            <h2>Banking Portal</h2>
+            <p>Sign in to your account</p>
         </div>
 
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Enter password" required>
+        <div class="oauth-buttons">
+            <a href="/oauth2/authorization/google" class="oauth-btn google-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+                Continue with Google
+            </a>
+
+            <a href="/oauth2/authorization/github" class="oauth-btn github-btn">
+                <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                </svg>
+                Continue with GitHub
+            </a>
         </div>
 
-        <button type="submit" class="submit-btn" id="submitBtn">Sign In</button>
-    </form>
+        <div class="divider">
+            <span>or sign in with password</span>
+        </div>
 
-    <div id="resultBox" class="result-box"></div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter password" required>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Sign In</button>
+        </form>
+
+        <a href="/" class="portal-link">← Go to Full Banking Dashboard</a>
+
+        <div id="resultBox" class="result-box"></div>
+    </div>
 </div>
 
 <script>
@@ -224,8 +303,12 @@
             resultBox.style.display = 'block';
 
             if (res.ok) {
+                localStorage.setItem('jwt_token', data.token);
+                if (data.accountNumber) localStorage.setItem('account_number', data.accountNumber);
+                localStorage.setItem('username', username);
+
                 resultBox.className = 'result-box result-success';
-                resultBox.innerHTML = `<strong>Login Successful!</strong><br><br><strong>JWT Token:</strong><br><code>${data.token}</code><br><br><strong>Account Number:</strong> ${data.accountNumber || 'N/A'}`;
+                resultBox.innerHTML = `<strong>Login Successful!</strong><br>Token saved. <a href="/" style="color:#34d399;font-weight:700;">Open Dashboard →</a>`;
             } else {
                 resultBox.className = 'result-box result-error';
                 resultBox.innerHTML = `<strong>Login Failed:</strong> ${data.message || 'Invalid credentials'}`;
@@ -233,7 +316,7 @@
         } catch (err) {
             resultBox.style.display = 'block';
             resultBox.className = 'result-box result-error';
-            resultBox.innerText = 'Network error occurred: ' + err.message;
+            resultBox.innerText = 'Network error: ' + err.message;
         } finally {
             submitBtn.disabled = false;
             submitBtn.innerText = 'Sign In';
@@ -243,4 +326,3 @@
 
 </body>
 </html>
-

@@ -36,3 +36,4 @@ jobs:
         name: springboot-banking-jar
         path: target/springboot-banking-*.jar
         retention-days: 7
+
