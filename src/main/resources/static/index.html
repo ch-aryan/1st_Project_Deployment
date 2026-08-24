@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Boot Banking System - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --card-bg: rgba(22, 30, 49, 0.85);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --input-bg: #111827;
+            --input-border: #374151;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 40%),
+                        var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--card-border);
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-badge {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+        }
+
+        .brand h1 {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .brand span {
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-swagger {
+            background: rgba(59, 130, 246, 0.12);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-swagger:hover {
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+        }
+
+        .auth-status-chip {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .auth-status-chip.authenticated {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 28px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-muted);
+            border: 1px solid var(--card-border);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 32px;
+            backdrop-filter: blur(12px);
+            margin-bottom: 24px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .card-header {
+            margin-bottom: 24px;
+        }
+
+        .card-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .card-header p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        .form-group input, .form-group select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-main);
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .alert {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            line-height: 1.5;
+            display: none;
+            word-break: break-all;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--card-border);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: #e2e8f0;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge-type {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-deposit {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+        }
+
+        .badge-withdraw {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .badge-transfer {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
+
+        .token-display {
+            background: #090d16;
+            border: 1px solid #1f293d;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #93c5fd;
+            max-height: 80px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="brand">
+            <div class="logo-badge">🏦</div>
+            <div>
+                <h1>Spring Banking <span>Core</span></h1>
+                <p style="font-size: 12px; color: var(--text-muted);">Cloud REST API & Portal</p>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <a href="/swagger-ui/index.html" target="_blank" class="btn-swagger">
+                <span>⚡ Interactive Swagger UI</span> ↗
+            </a>
+            <div id="authStatusChip" class="auth-status-chip">
+                <span class="status-dot"></span>
+                <span id="authStatusText">Not Authenticated</span>
+            </div>
+            <button id="logoutBtn" class="btn-secondary" style="display: none; padding: 6px 14px; font-size: 12px;" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('auth', event)">🔐 Auth & Registration</button>
+        <button class="tab-btn" onclick="switchTab('deposit', event)">💵 Deposit</button>
+        <button class="tab-btn" onclick="switchTab('withdraw', event)">💸 Withdraw</button>
+        <button class="tab-btn" onclick="switchTab('transfer', event)">🔁 Transfer</button>
+        <button class="tab-btn" onclick="switchTab('history', event)">📜 Transaction History</button>
+    </div>
+
+    <!-- TAB 1: AUTH & REGISTRATION -->
+    <div id="tab-auth" class="tab-content active">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Sign In</h2>
+                    <p>Enter your credentials to get JWT Bearer Token</p>
+                </div>
+                <form id="loginForm">
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <label>Username</label>
+                        <input type="text" id="loginUsername" placeholder="e.g. aryan_raj" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 18px;">
+                        <label>Password</label>
+                        <input type="password" id="loginPassword" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%;">Sign In</button>
+                </form>
+
+                <div style="margin-top: 20px; text-align: center; color: var(--text-muted); font-size: 12px;">or social sign in</div>
+                <div style="display: flex; gap: 10px; margin-top: 12px;">
+                    <a href="/oauth2/authorization/google" class="btn-secondary" style="flex: 1; text-align: center; text-decoration: none; font-size: 13px;">Google</a>
+                    <a href="/oauth2/authorization/github" class="btn-secondary" style="flex: 1; text-align: center; text-decoration: none; font-size: 13px;">GitHub</a>
+                </div>
+
+                <div id="loginAlert" class="alert"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Open New Account</h2>
+                    <p>Register customer & auto-generate bank account</p>
+                </div>
+                <form id="registerForm">
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label>Full Name</label>
+                        <input type="text" id="regName" placeholder="Aryan Raj" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label>Username</label>
+                        <input type="text" id="regUsername" placeholder="aryan_raj" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label>Password</label>
+                        <input type="password" id="regPassword" placeholder="Password@123" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label>4-Digit Security PIN</label>
+                        <input type="password" id="regPin" maxlength="4" placeholder="1234" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 18px;">
+                        <label>Date of Birth</label>
+                        <input type="date" id="regDob" value="2000-01-01" required>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%;">Create Account</button>
+                </form>
+                <div id="registerAlert" class="alert"></div>
+            </div>
+        </div>
+
+        <div class="card" id="sessionCard" style="display: none;">
+            <div class="card-header">
+                <h2>Active Session Details</h2>
+                <p>Use this JWT Token for Swagger Authorization & Protected API Endpoints</p>
+            </div>
+            <div style="font-size: 13px; color: var(--text-muted); line-height: 1.8;">
+                <div><strong>Current Account Number:</strong> <span id="sessionAccount" style="color: #60a5fa; font-weight: 700;"></span></div>
+                <div><strong>Current Username:</strong> <span id="sessionUser" style="color: #f8fafc; font-weight: 600;"></span></div>
+                <div style="margin-top: 8px;"><strong>Stored JWT Token:</strong></div>
+                <div id="tokenBox" class="token-display"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2: DEPOSIT -->
+    <div id="tab-deposit" class="tab-content">
+        <div class="card" style="max-width: 540px; margin: 0 auto;">
+            <div class="card-header">
+                <h2>💵 Deposit Money</h2>
+                <p>Deposit funds into your active bank account</p>
+            </div>
+            <form id="depositForm">
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label>Account Number</label>
+                    <input type="text" id="depositAccount" placeholder="Enter or select your account" required>
+                </div>
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label>Amount (₹ / $)</label>
+                    <input type="number" step="0.01" min="1" id="depositAmount" placeholder="e.g. 1000.00" required>
+                </div>
+                <div class="form-group" style="margin-bottom: 22px;">
+                    <label>4-Digit Security PIN</label>
+                    <input type="password" maxlength="4" id="depositPin" placeholder="••••" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Deposit Funds</button>
+            </form>
+            <div id="depositAlert" class="alert"></div>
+        </div>
+    </div>
+
+    <!-- TAB 3: WITHDRAW -->
+    <div id="tab-withdraw" class="tab-content">
+        <div class="card" style="max-width: 540px; margin: 0 auto;">
+            <div class="card-header">
+                <h2>💸 Withdraw Funds</h2>
+                <p>Withdraw money securely with real-time balance check</p>
+            </div>
+            <form id="withdrawForm">
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label>Account Number</label>
+                    <input type="text" id="withdrawAccount" placeholder="Enter your account number" required>
+                </div>
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label>Amount (₹ / $)</label>
+                    <input type="number" step="0.01" min="1" id="withdrawAmount" placeholder="e.g. 500.00" required>
+                </div>
+                <div class="form-group" style="margin-bottom: 22px;">
+                    <label>4-Digit Security PIN</label>
+                    <input type="password" maxlength="4" id="withdrawPin" placeholder="••••" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Withdraw Funds</button>
+            </form>
+            <div id="withdrawAlert" class="alert"></div>
+        </div>
+    </div>
+
+    <!-- TAB 4: TRANSFER -->
+    <div id="tab-transfer" class="tab-content">
+        <div class="card" style="max-width: 600px; margin: 0 auto;">
+            <div class="card-header">
+                <h2>🔁 Atomic Money Transfer</h2>
+                <p>Transfer money between two accounts with transactional integrity</p>
+            </div>
+            <form id="transferForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Sender Account Number</label>
+                        <input type="text" id="fromAccount" placeholder="Source account" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Recipient Account Number</label>
+                        <input type="text" id="toAccount" placeholder="Destination account" required>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Amount (₹ / $)</label>
+                        <input type="number" step="0.01" min="1" id="transferAmount" placeholder="e.g. 250.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Sender 4-Digit PIN</label>
+                        <input type="password" maxlength="4" id="transferPin" placeholder="••••" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Execute Transfer</button>
+            </form>
+            <div id="transferAlert" class="alert"></div>
+        </div>
+    </div>
+
+    <!-- TAB 5: TRANSACTION HISTORY -->
+    <div id="tab-history" class="tab-content">
+        <div class="card">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <div>
+                    <h2>📜 Statement & Transaction History</h2>
+                    <p>Live ledger records for your account</p>
+                </div>
+                <button onclick="fetchHistory()" class="btn-secondary" style="padding: 8px 16px; font-size: 13px;">🔄 Refresh Statement</button>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Txn ID</th>
+                            <th>Timestamp</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Balance After</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 24px;">No transactions loaded yet. Sign in and click Refresh Statement.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="historyAlert" class="alert"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function switchTab(tabId, ev) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        
+        if (ev && ev.currentTarget) {
+            ev.currentTarget.classList.add('active');
+        }
+        const targetTab = document.getElementById('tab-' + tabId);
+        if (targetTab) targetTab.classList.add('active');
+
+        if (tabId === 'history') {
+            fetchHistory();
+        }
+    }
+
+    function getJwt() {
+        return localStorage.getItem('jwt_token');
+    }
+
+    function setAuth(token, account, user) {
+        localStorage.setItem('jwt_token', token);
+        if (account) localStorage.setItem('account_number', account);
+        if (user) localStorage.setItem('username', user);
+        updateAuthUI();
+    }
+
+    function logout() {
+        localStorage.clear();
+        updateAuthUI();
+    }
+
+    function updateAuthUI() {
+        const token = getJwt();
+        const account = localStorage.getItem('account_number') || 'N/A';
+        const user = localStorage.getItem('username') || 'User';
+
+        const chip = document.getElementById('authStatusChip');
+        const text = document.getElementById('authStatusText');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const sessionCard = document.getElementById('sessionCard');
+
+        if (token) {
+            chip.className = 'auth-status-chip authenticated';
+            text.innerText = `Connected: ${user} (${account})`;
+            logoutBtn.style.display = 'inline-block';
+            sessionCard.style.display = 'block';
+            document.getElementById('sessionAccount').innerText = account;
+            document.getElementById('sessionUser').innerText = user;
+            document.getElementById('tokenBox').innerText = token;
+
+            if (account && account !== 'N/A') {
+                if (document.getElementById('depositAccount')) document.getElementById('depositAccount').value = account;
+                if (document.getElementById('withdrawAccount')) document.getElementById('withdrawAccount').value = account;
+                if (document.getElementById('fromAccount')) document.getElementById('fromAccount').value = account;
+            }
+        } else {
+            chip.className = 'auth-status-chip';
+            text.innerText = 'Not Authenticated';
+            logoutBtn.style.display = 'none';
+            sessionCard.style.display = 'none';
+        }
+    }
+
+    function showAlert(elementId, isSuccess, message) {
+        const alert = document.getElementById(elementId);
+        alert.style.display = 'block';
+        alert.className = isSuccess ? 'alert alert-success' : 'alert alert-error';
+        alert.innerHTML = message;
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+
+        try {
+            const res = await fetch('/api/v3/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                setAuth(data.token, data.accountNumber, username);
+                showAlert('loginAlert', true, `✅ <strong>Login Successful!</strong> Welcome back, ${username}!`);
+            } else {
+                showAlert('loginAlert', false, `❌ ${data.message || 'Invalid username or password'}`);
+            }
+        } catch (err) {
+            showAlert('loginAlert', false, `Network error: ${err.message}`);
+        }
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const name = document.getElementById('regName').value;
+        const username = document.getElementById('regUsername').value;
+        const password = document.getElementById('regPassword').value;
+        const pin = document.getElementById('regPin').value;
+        const dateOfBirth = document.getElementById('regDob').value;
+
+        try {
+            const res = await fetch('/api/v3/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, username, password, pin, dateOfBirth })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                showAlert('registerAlert', true, `🎉 <strong>Account Created!</strong><br>Account Number: <strong>${data.accountNumber}</strong><br>You can now Sign In with your password.`);
+                document.getElementById('loginUsername').value = username;
+            } else {
+                showAlert('registerAlert', false, `❌ ${data.message || 'Registration failed'}`);
+            }
+        } catch (err) {
+            showAlert('registerAlert', false, `Network error: ${err.message}`);
+        }
+    });
+
+    document.getElementById('depositForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const accountNumber = document.getElementById('depositAccount').value;
+        const amount = document.getElementById('depositAmount').value;
+        const pin = document.getElementById('depositPin').value;
+        const token = getJwt();
+
+        try {
+            const res = await fetch('/api/banking/deposit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token ? `Bearer ${token}` : ''
+                },
+                body: JSON.stringify({ accountNumber, amount: parseFloat(amount), pin })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                showAlert('depositAlert', true, `✅ <strong>Deposit Successful!</strong><br>Deposited: ₹${data.amount || amount}<br>New Balance: ₹${data.currentBalance || data.balance}`);
+            } else {
+                showAlert('depositAlert', false, `❌ ${data.message || 'Deposit failed'}`);
+            }
+        } catch (err) {
+            showAlert('depositAlert', false, `Network error: ${err.message}`);
+        }
+    });
+
+    document.getElementById('withdrawForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const accountNumber = document.getElementById('withdrawAccount').value;
+        const amount = document.getElementById('withdrawAmount').value;
+        const pin = document.getElementById('withdrawPin').value;
+        const token = getJwt();
+
+        try {
+            const res = await fetch('/api/banking/withdraw', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token ? `Bearer ${token}` : ''
+                },
+                body: JSON.stringify({ accountNumber, amount: parseFloat(amount), pin })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                showAlert('withdrawAlert', true, `✅ <strong>Withdrawal Successful!</strong><br>Debited: ₹${data.amount || amount}<br>Remaining Balance: ₹${data.currentBalance || data.balance}`);
+            } else {
+                showAlert('withdrawAlert', false, `❌ ${data.message || 'Withdrawal failed'}`);
+            }
+        } catch (err) {
+            showAlert('withdrawAlert', false, `Network error: ${err.message}`);
+        }
+    });
+
+    document.getElementById('transferForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const fromAccountNumber = document.getElementById('fromAccount').value;
+        const toAccountNumber = document.getElementById('toAccount').value;
+        const amount = document.getElementById('transferAmount').value;
+        const pin = document.getElementById('transferPin').value;
+        const token = getJwt();
+
+        try {
+            const res = await fetch('/api/banking/transfer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token ? `Bearer ${token}` : ''
+                },
+                body: JSON.stringify({ fromAccountNumber, toAccountNumber, amount: parseFloat(amount), pin })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                showAlert('transferAlert', true, `✅ <strong>Transfer Completed!</strong><br>Transferred: ₹${data.amount || amount} to account ${toAccountNumber}<br>Updated Balance: ₹${data.currentBalance || data.balance}`);
+            } else {
+                showAlert('transferAlert', false, `❌ ${data.message || 'Transfer failed'}`);
+            }
+        } catch (err) {
+            showAlert('transferAlert', false, `Network error: ${err.message}`);
+        }
+    });
+
+    async function fetchHistory() {
+        const token = getJwt();
+        const tableBody = document.getElementById('historyTableBody');
+        const alert = document.getElementById('historyAlert');
+
+        if (!token) {
+            showAlert('historyAlert', false, '⚠️ Please Sign In first on the "Auth & Registration" tab to view transaction records.');
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/banking/transactions', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            if (res.ok && Array.isArray(data)) {
+                if (data.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted); padding: 20px;">No transactions recorded for this account yet.</td></tr>`;
+                    return;
+                }
+                tableBody.innerHTML = data.map(tx => {
+                    const badgeClass = tx.transactionType === 'DEPOSIT' ? 'badge-deposit' : (tx.transactionType === 'WITHDRAWAL' ? 'badge-withdraw' : 'badge-transfer');
+                    return `
+                        <tr>
+                            <td>#${tx.id || tx.transactionId || '-'}</td>
+                            <td>${tx.timestamp || tx.transactionDate || new Date().toLocaleDateString()}</td>
+                            <td><span class="badge-type ${badgeClass}">${tx.transactionType}</span></td>
+                            <td style="font-weight:700;">₹${tx.amount}</td>
+                            <td style="color:#34d399; font-weight:600;">₹${tx.currentBalance || tx.balanceAfter || '-'}</td>
+                        </tr>
+                    `;
+                }).join('');
+            } else {
+                showAlert('historyAlert', false, `❌ ${data.message || 'Failed to fetch history'}`);
+            }
+        } catch (err) {
+            showAlert('historyAlert', false, `Network error: ${err.message}`);
+        }
+    }
+
+    updateAuthUI();
+</script>
+
+</body>
+</html>
