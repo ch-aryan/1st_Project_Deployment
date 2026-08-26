@@ -7,8 +7,8 @@ import com.springbootbanking.dto.registration.RegistrationResponse;
 import com.springbootbanking.entity.BankAccount;
 import com.springbootbanking.entity.Customer;
 import com.springbootbanking.exception.*;
+import com.springbootbanking.repository.BankAccountRepository;
 import com.springbootbanking.repository.CustomerRepository;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,14 +21,14 @@ import java.time.Period;
 public class RegistrationService {
 
     private final CustomerRepository customerRepository;
-    private final EntityManager entityManager;
+    private final BankAccountRepository bankAccountRepository;
     private final PasswordEncoder passwordEncoder;
 
     public RegistrationService(CustomerRepository customerRepository,
-                               EntityManager entityManager,
+                               BankAccountRepository bankAccountRepository,
                                PasswordEncoder passwordEncoder) {
         this.customerRepository = customerRepository;
-        this.entityManager = entityManager;
+        this.bankAccountRepository = bankAccountRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -123,9 +123,6 @@ public class RegistrationService {
     }
 
     private Integer generateAccountNumber() {
-        Number nextVal = (Number) entityManager.createNativeQuery(
-                "SELECT nextval('account_number_seq')"
-        ).getSingleResult();
-        return nextVal.intValue();
+        return bankAccountRepository.getNextAccountNumber();
     }
 }

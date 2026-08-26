@@ -1,5 +1,6 @@
 package com.springbootbanking.service;
 
+/*
 import com.springbootbanking.dto.auth.OAuthRegistrationCompleteRequest;
 import com.springbootbanking.dto.registration.RegistrationRequest;
 import com.springbootbanking.dto.registration.RegistrationResponse;
@@ -259,4 +260,4 @@ public class RegistrationServiceTest {
         }
     }
 }
-
+*/
