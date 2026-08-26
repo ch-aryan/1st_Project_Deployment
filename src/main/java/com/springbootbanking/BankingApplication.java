@@ -9,7 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 @SpringBootApplication
 public class BankingApplication {
 
-    public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args)  {
 
         SpringApplication.run(BankingApplication.class, args);
 

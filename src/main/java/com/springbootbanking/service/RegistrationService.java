@@ -25,8 +25,8 @@ public class RegistrationService {
     private final PasswordEncoder passwordEncoder;
 
     public RegistrationService(CustomerRepository customerRepository,
-                               BankAccountRepository bankAccountRepository,
-                               PasswordEncoder passwordEncoder) {
+            BankAccountRepository bankAccountRepository,
+            PasswordEncoder passwordEncoder) {
         this.customerRepository = customerRepository;
         this.bankAccountRepository = bankAccountRepository;
         this.passwordEncoder = passwordEncoder;
@@ -43,8 +43,7 @@ public class RegistrationService {
         return new RegistrationResponse(
                 true,
                 "Registration successful",
-                customer.getAccount().getAccountNumber()
-        );
+                customer.getAccount().getAccountNumber());
     }
 
     public RegistrationResponse completeOAuthRegistration(String username, OAuthRegistrationCompleteRequest request) {
@@ -70,8 +69,7 @@ public class RegistrationService {
         return new RegistrationResponse(
                 true,
                 "Registration completed successfully",
-                account.getAccountNumber()
-        );
+                account.getAccountNumber());
     }
 
     private void validateBusinessRules(RegistrationRequest request) {
@@ -118,8 +116,7 @@ public class RegistrationService {
                 encodedPassword,
                 request.getDateOfBirth(),
                 request.getGender(),
-                account
-        );
+                account);
     }
 
     private Integer generateAccountNumber() {
